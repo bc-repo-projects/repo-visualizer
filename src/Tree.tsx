@@ -845,6 +845,112 @@
 
 
 
+// import React, { useMemo, useRef, useState } from "react";
+// import {
+//  extent,
+//  forceCollide,
+//  forceSimulation,
+//  forceX,
+//  forceY,
+//  hierarchy,
+//  pack,
+//  scaleLinear,
+//  scaleSqrt,
+//  timeFormat,
+// } from "d3";
+// import { FileType } from "./types";
+// import countBy from "lodash/countBy";
+// import maxBy from "lodash/maxBy";
+// import entries from "lodash/entries";
+// import uniqBy from "lodash/uniqBy";
+// import flatten from "lodash/flatten";
+// import defaultFileColors from "./language-colors.json";
+// import { CircleText } from "./CircleText";
+// import { keepBetween, keepCircleInsideCircle, truncateString } from "./utils";
+
+// const Tree = ({ data }: { data: FileType }) => {
+//  // Set up force simulation
+//  const width = window.innerWidth;
+//  const height = window.innerHeight;
+
+//  const simulation = useMemo(() => {
+//    const nodes = hierarchy.nodes(pack(data).descendants(d => d.data).slice(1));
+//    return forceSimulation(nodes)
+//      .force("charge", forceCollide(d => d.r * 2).strength(-300))
+//      .force("x", forceX(width / 2).strength(0.01))
+//      .force("y", forceY(height / 2).strength(0.01))
+//      .stop();
+//  }, [width, height, data]);
+
+//  const [nodeData, setNodeData] = useState<any>(simulation.nodes());
+//  const [linkData, setLinkData] = useState<any>(simulation.force("link").links());
+
+//  // Set up the SVG
+//  const svgRef = useRef<SVGSVGElement | null>(null);
+
+//  const render = () => {
+//    const svg = d3.select(svgRef.current);
+
+//    const node = svg
+//      .selectAll("g")
+//      .data(nodeData)
+//      .enter()
+//      .append("g")
+//      .attr("transform", d => `translate(${d.x}, ${d.y})`);
+
+//    const fileNode = node.append("circle")
+//      .attr("r", d => d.r)
+//      .attr("fill", d => defaultFileColors[d.data.extension])
+//      .call(keepCircleInsideCircle(svgRef))
+//      .call(keepBetween(svgRef, 30, 50));
+
+//    const fileLabel = node.append(CircleText)
+//      .style("font-size", 12)
+//      .attr("r", d => Math.max(20, d.r - 3))
+//      .attr("fill", "#374151")
+//      .attr("stroke", "white")
+//      .attr("strokeWidth", 6)
+//      .attr("rotate", d => d.depth * 1 - 0)
+//      .text(d => truncateString(d.data.name, 12));
+
+//    const link = svg
+//      .selectAll("line")
+//      .data(linkData)
+//      .enter()
+//      .append("line")
+//      .attr("class", "link")
+//      .style("stroke-width", (d) => d.value)
+//      .call(keepBetween(svgRef, 1, 1));
+
+//    const handleMouseOver = (event: any) => {
+//      const node = event.target.__data__;
+//      d3.select(event.target).style("stroke-width", 3);
+//      nodeData.filter((n) => n.id === node.id).forEach((n) => {
+//        n.parentNode.__data__.r *= 1.25;
+//        n.r *= 1.25;
+//      });
+//    };
+
+//    const handleMouseOut = () => {
+//      nodeData.forEach((node) => {
+//        node.r = Math.pow(node.r, 1 / 2.5);
+//      });
+//      d3.select(event.target).style("stroke-width", 1);
+//    };
+
+//    link.on("mouseover", handleMouseOver).on("mouseout", handleMouseOut);
+//  };
+
+//  return (
+//    <svg ref={svgRef} width={width} height={height}>
+//      {render()}
+//    </svg>
+//  );
+// };
+
+// export default Tree;
+
+
 import React, { useMemo, useRef, useState } from "react";
 import {
  extent,
@@ -868,6 +974,12 @@ import defaultFileColors from "./language-colors.json";
 import { CircleText } from "./CircleText";
 import { keepBetween, keepCircleInsideCircle, truncateString } from "./utils";
 
+// Define constants
+const STROKE_WIDTH_MOUSE_OVER = 3;
+const STROKE_WIDTH_MOUSE_OUT = 1;
+const RADIUS_MULTIPLIER_MOUSE_OVER = 1.25;
+const RADIUS_MULTIPLIER_MOUSE_OUT = 1 / 2.5;
+
 const Tree = ({ data }: { data: FileType }) => {
  // Set up force simulation
  const width = window.innerWidth;
@@ -887,6 +999,22 @@ const Tree = ({ data }: { data: FileType }) => {
 
  // Set up the SVG
  const svgRef = useRef<SVGSVGElement | null>(null);
+
+ const handleMouseOver = (event: any) => {
+   const node = event.target.__data__;
+   d3.select(event.target).style("stroke-width", STROKE_WIDTH_MOUSE_OVER);
+   nodeData.filter((n) => n.id === node.id).forEach((n) => {
+     n.parentNode.__data__.r *= RADIUS_MULTIPLIER_MOUSE_OVER;
+     n.r *= RADIUS_MULTIPLIER_MOUSE_OVER;
+   });
+ };
+
+ const handleMouseOut = () => {
+   nodeData.forEach((node) => {
+     node.r = Math.pow(node.r, RADIUS_MULTIPLIER_MOUSE_OUT);
+   });
+   d3.select(event.target).style("stroke-width", STROKE_WIDTH_MOUSE_OUT);
+ };
 
  const render = () => {
    const svg = d3.select(svgRef.current);
@@ -921,22 +1049,6 @@ const Tree = ({ data }: { data: FileType }) => {
      .attr("class", "link")
      .style("stroke-width", (d) => d.value)
      .call(keepBetween(svgRef, 1, 1));
-
-   const handleMouseOver = (event: any) => {
-     const node = event.target.__data__;
-     d3.select(event.target).style("stroke-width", 3);
-     nodeData.filter((n) => n.id === node.id).forEach((n) => {
-       n.parentNode.__data__.r *= 1.25;
-       n.r *= 1.25;
-     });
-   };
-
-   const handleMouseOut = () => {
-     nodeData.forEach((node) => {
-       node.r = Math.pow(node.r, 1 / 2.5);
-     });
-     d3.select(event.target).style("stroke-width", 1);
-   };
 
    link.on("mouseover", handleMouseOver).on("mouseout", handleMouseOut);
  };
