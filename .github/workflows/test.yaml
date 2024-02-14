@@ -246,7 +246,7 @@ jobs:
 
       - name: Deploy to Netlify
         run: netlify deploy --prod
-        working-directory: ./dist
+        # working-directory: ./dist
         env:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
