@@ -1,0 +1,9 @@
+[build]
+  base = "./"
+  publish = "dist/"
+  psckage = "./"
+  command = "npm run build"
+  functions = "netlify/functions"
+
+[context.production.environment]
+  NODE_ENV = "production"
