@@ -1169,7 +1169,7 @@ const STROKE_WIDTH_MOUSE_OUT = 1;
 const RADIUS_MULTIPLIER_MOUSE_OVER = 1.25;
 const RADIUS_MULTIPLIER_MOUSE_OUT = 1 / 2.5;
 
-const Tree = ({ data }: { data: FileType }) => {
+export const Tree = ({ data }: { data: FileType }) => {
   // Set up force simulation
   const width = window.innerWidth;
   const height = window.innerHeight;
@@ -1233,5 +1233,3 @@ const Tree = ({ data }: { data: FileType }) => {
     </svg>
   );
 };
-
-export default Tree;
