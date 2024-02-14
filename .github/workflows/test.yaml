@@ -83,12 +83,14 @@ jobs:
         with:
           node-version: 20.11.0
 
-      - name: Add Jest to PATH
-        run: echo "./node_modules/.bin" >> $GITHUB_PATH
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Jest
+        run: npm install --save-dev jest
 
       - name: Run tests
-        run: npm test
-
+        run: npx jest
 
   deploy:
     needs: build-and-test
@@ -106,3 +108,4 @@ jobs:
         env:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+
