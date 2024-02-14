@@ -1,5 +1,5 @@
-import uniqueId from "lodash/uniqueId";
-import React from "react";
+// import uniqueId from "lodash/uniqueId";
+// import React from "react";
 
 // interface CircleTextProps {
 //   r: number;
@@ -46,6 +46,60 @@ import React from "react";
 // };
 
 
+// interface CircleTextProps {
+//  id: string;
+//  x: number;
+//  y: number;
+//  r: number;
+//  text: string;
+//  language: string;
+//  color: string;
+//  onMouseOver: (event: React.MouseEvent<SVGRectElement>) => void;
+//  onMouseEnter: (event: React.MouseEvent<SVGRectElement>) => void;
+//  onMouseLeave: (event: React.MouseEvent<SVGRectElement>) => void;
+// }
+
+// export const CircleText = (props: CircleTextProps) => {
+//  const { id, x, y, r, text, language, color, onMouseOver, onMouseEnter, onMouseLeave } = props;
+
+//  // ...
+
+//  return (
+//    <g
+//      id={id}
+//      onMouseOver={onMouseOver}
+//      onMouseEnter={onMouseEnter}
+//      onMouseLeave={onMouseLeave}
+//    >
+//      <circle
+//        r={r}
+//        cx={x}
+//        cy={y}
+//        fill={color}
+//        fillOpacity={0.6}
+//        stroke={stroke}
+//        strokeWidth={strokeWidth}
+//      />
+//      {showLabel && (
+//        <Text
+//          text={text}
+//          x={x}
+//          y={y}
+//          language={language}
+//          color={color}
+//          style={styles.label}
+//          fontSize={fontSize}
+//          fontFamily={fontFamily}
+//        />
+//      )}
+//    </g>
+//   );
+// };
+
+
+import uniqueId from "lodash/uniqueId";
+import React from "react";
+
 interface CircleTextProps {
  id: string;
  x: number;
@@ -54,13 +108,19 @@ interface CircleTextProps {
  text: string;
  language: string;
  color: string;
+ stroke?: string;
+ strokeWidth?: number;
+ showLabel?: boolean;
+ fontSize?: number;
+ fontFamily?: string;
+ style?: React.CSSProperties;
  onMouseOver: (event: React.MouseEvent<SVGRectElement>) => void;
  onMouseEnter: (event: React.MouseEvent<SVGRectElement>) => void;
  onMouseLeave: (event: React.MouseEvent<SVGRectElement>) => void;
 }
 
 export const CircleText = (props: CircleTextProps) => {
- const { id, x, y, r, text, language, color, onMouseOver, onMouseEnter, onMouseLeave } = props;
+ const { id, x, y, r, text, language, color, stroke = "black", strokeWidth = 1, showLabel = true, fontSize = 14, fontFamily = "Arial", style, onMouseOver, onMouseEnter, onMouseLeave } = props;
 
  // ...
 
@@ -81,16 +141,13 @@ export const CircleText = (props: CircleTextProps) => {
        strokeWidth={strokeWidth}
      />
      {showLabel && (
-       <Text
-         text={text}
+       <text
          x={x}
          y={y}
-         language={language}
-         color={color}
-         style={styles.label}
-         fontSize={fontSize}
-         fontFamily={fontFamily}
-       />
+         style={{...style, fontSize, fontFamily}}
+       >
+         {text}
+       </text>
      )}
    </g>
   );
