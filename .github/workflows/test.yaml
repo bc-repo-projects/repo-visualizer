@@ -83,9 +83,6 @@ jobs:
         with:
           node-version: 20.11.0
 
-      - name: Install dependencies
-        run: npm ci
-
       - name: Add Jest to PATH
         run: echo "./node_modules/.bin" >> $GITHUB_PATH
 
