@@ -2,7 +2,7 @@
   base = "./"
   publish = "./"
   package = "./"
-  command = "yarn build"
+  command = "npm run build"
   functions = "netlify/functions"
 
 [context.production.environment]
