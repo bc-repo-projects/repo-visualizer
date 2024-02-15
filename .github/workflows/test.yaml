@@ -228,7 +228,7 @@ jobs:
         run: npm ci
 
       - name: Build project
-        run: npm run build
+        run: yarn build
 
       - name: Run tests
         run: npm test
