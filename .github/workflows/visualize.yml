@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: bc-rep-project/repo-visualizer@main
+      - uses: bc-repo-projects/repo-visualizer@Feature/Add-Import-Visualization
         with:
           output_file: diagram.svg
           excluded_paths: node_modules,dist

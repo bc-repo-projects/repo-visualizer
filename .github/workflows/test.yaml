@@ -243,6 +243,11 @@ jobs:
 
       - name: Install Netlify CLI
         run: npm install netlify-cli -g
+        
+      # - name: Deploy to Netlify
+      #   run: |
+    
+      #     netlify deploy --dir=path_to_your_svg --prod
 
       - name: Deploy to Netlify
         run: netlify deploy --prod
